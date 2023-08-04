@@ -16,7 +16,7 @@ Just like [rust-by-practice](https://github.com/sunface/rust-by-practice) and [r
 
 ## Collections
 
-- [ ] [guess number]() `game` `repl`
+- [x] [guess number](./guess_number/README.md) `game` `repl`
 - [ ] [file tree]() `fs` `command`
 - [ ] [text editor]()  `editor` `terminal`
 - [ ] [calculator]() `repl` `compilation`
