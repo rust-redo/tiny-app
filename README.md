@@ -10,7 +10,7 @@ Just like [rust-by-practice](https://github.com/sunface/rust-by-practice) and [r
 
 > Every collection's source code in `tiny-app` contains comprehensive comments, it's easy to read. 
 
-- A deeper understanding of Rust syntax.
+- A deeper understanding of Rust syntax and engineering.
 - A implementation overview of each application.
 
 
@@ -21,6 +21,8 @@ Just like [rust-by-practice](https://github.com/sunface/rust-by-practice) and [r
 - [ ] [calculator]() `repl` `compilation`
 - [ ] [greedy snake]() `game` `web` `wasm` `robot`
 - [ ] [linkedlist]() `structure` `algorithm`
+
+More collections are on the way...
 
 ## Contribute [Todo]
 
