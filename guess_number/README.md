@@ -12,7 +12,7 @@ You can check full source code [here](./src/main.rs).
 $ cargo run
 ```
 
-## References
+### References
 
-- [1] [Programming a Guessing Game](https://doc.rust-lang.org/book/ch02-00-guessing-game-tutorial.html)
-- [2] [rand crate](https://docs.rs/rand/latest/rand/)
+1. [Programming a Guessing Game](https://doc.rust-lang.org/book/ch02-00-guessing-game-tutorial.html)
+2. [rand crate](https://docs.rs/rand/latest/rand/)
