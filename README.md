@@ -1,6 +1,6 @@
 # tiny-app
 
-`tiny-app` is a collection of tiny applications implemented in Rust. 
+`tiny-app` is a collection of tiny applications or libraries implemented in Rust. 
 
 ## Why
 
