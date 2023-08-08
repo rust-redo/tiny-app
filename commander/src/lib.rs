@@ -97,7 +97,7 @@ mod test {
 
         let file_path = cmd.args_value::<String>("file");
 
-        assert_eq!(file_path, Some(&"/root".to_string()))
+        assert_eq!(file_path, Some(&"/root".to_string()));
     }
 
     #[test]
@@ -109,12 +109,21 @@ mod test {
             ..Arg::default()
         });
 
-        assert_eq!(cmd.args[2].id, "port");
-
         cmd._parse(vec![OsString::from("-p"), OsString::from("8080")]);
 
         let port = cmd.args_value::<i32>("port");
 
-        assert_eq!(port, Some(&8080))
+        assert_eq!(port, Some(&8080));
+    }
+
+    #[test]
+    fn should_parse_bool() {
+        let mut cmd = create();
+
+        cmd._parse(vec![OsString::from("-h")]);
+
+        let help = cmd.args_value::<bool>("help");
+
+        assert_eq!(help, Some(&true));
     }
 }

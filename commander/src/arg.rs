@@ -11,7 +11,6 @@ pub enum ArgValueType {
 #[derive(Clone, Debug)]
 pub struct Arg<'a> {
     pub id: &'a str,
-    pub required: bool,
     pub value: Option<Rc<dyn Any + 'static>>,
     pub value_type: ArgValueType,
     pub usage: &'a str,
@@ -21,7 +20,6 @@ impl<'a> Default for Arg<'a> {
     fn default() -> Self {
         Arg {
             id: "",
-            required: false,
             value: None,
             value_type: ArgValueType::Bool,
             usage: "",
@@ -37,7 +35,11 @@ impl<'a> Arg<'a> {
         format!("-{}", self.id.chars().nth(0).unwrap())
     }
     pub fn pattern(&self) -> String {
-        format!("{}, {}", self.short_option(), self.option())
+        format!("{}, {}{}", self.short_option(), self.option(), match self.value_type {
+            ArgValueType::Bool => "",
+            ArgValueType::String => " <string>",
+            ArgValueType::Number => " <number>"
+        } , )
     }
     pub fn usage_with_pattern(&self, pad: usize) -> String {
         format!("  {: <2$}{}\n", self.pattern(), self.usage, pad,)

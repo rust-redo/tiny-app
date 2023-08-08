@@ -96,12 +96,16 @@ impl<'a> Command<'a> {
                     args_iter.find(|arg| arg.option() == opt_str || arg.short_option() == opt_str);
 
                 if let Some(_arg) = arg {
+                    if _arg.value_type == ArgValueType::Bool {
+                        _arg.value = Some(Rc::new(true));
+                    }
                     if index < os_str.len() - 1 {
                         let value = os_str[index + 1].clone().into_string().unwrap();
                         if !is_option(&value) {
                             _arg.value = Some(match _arg.value_type {
-                                ArgValueType::Number => {Rc::new(value.trim().parse::<i32>().unwrap())}, 
-                                _ => {Rc::new(value)},
+                                ArgValueType::Number => Rc::new(value.trim().parse::<i32>().unwrap()), 
+                                ArgValueType::String => Rc::new(value),
+                                ArgValueType::Bool => Rc::new(value == "true")
                             });
                         }
                     }
