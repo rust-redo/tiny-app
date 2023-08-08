@@ -1,5 +1,5 @@
-use std::{env::args_os, vec, ffi::OsString};
 use crate::arg::Arg;
+use std::{env::args_os, ffi::OsString, vec};
 
 #[derive(Default)]
 pub struct Command<'a> {
@@ -81,7 +81,8 @@ impl<'a> Command<'a> {
         while index < os_str.len() {
             let opt_str = os_str[index].clone().into_string().unwrap();
             if is_option(&opt_str) {
-                let arg = args_iter.find(|arg| arg.option() == opt_str || arg.short_option() == opt_str);
+                let arg =
+                    args_iter.find(|arg| arg.option() == opt_str || arg.short_option() == opt_str);
 
                 if let Some(_arg) = arg {
                     if index < os_str.len() - 1 {
@@ -93,15 +94,14 @@ impl<'a> Command<'a> {
 
                     match _arg.value {
                         None => index += 1,
-                        _ => index += 2
+                        _ => index += 2,
                     }
 
                     continue;
                 }
-            } 
-                
+            }
+
             panic!("Unknown option {}", opt_str);
         }
     }
 }
-

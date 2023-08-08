@@ -5,7 +5,10 @@ mod command;
 mod test {
     use std::ffi::OsString;
 
-    use crate::{arg::{Arg, ArgValueType}, command::Command};
+    use crate::{
+        arg::{Arg, ArgValueType},
+        command::Command,
+    };
 
     fn create<'a>() -> Command<'a> {
         Command::new("commander").description("A cli tools builder")
@@ -43,15 +46,15 @@ mod test {
 
     #[test]
     #[should_panic(expected = "Unknown option --foo")]
-    fn unknown_option_foo(){
+    fn unknown_option_foo() {
         let mut cmd = create();
         cmd._parse(vec![OsString::from("--foo")]);
     }
 
     #[test]
     #[should_panic(expected = "Unknown option --bar")]
-    fn unknown_option_bar(){
-        let mut cmd = create().args( Arg {
+    fn unknown_option_bar() {
+        let mut cmd = create().args(Arg {
             id: "file",
             value_type: ArgValueType::String,
             usage: "Search file path",
@@ -62,20 +65,24 @@ mod test {
 
     #[test]
     #[should_panic(expected = "Unknown option --baz")]
-    fn unknown_option_baz(){
-        let mut cmd = create().args( Arg {
+    fn unknown_option_baz() {
+        let mut cmd = create().args(Arg {
             id: "file",
             value_type: ArgValueType::String,
             usage: "Search file path",
             ..Arg::default()
         });
-        cmd._parse(vec![OsString::from("--file"), OsString::from("/root") ,OsString::from("--baz")]);
+        cmd._parse(vec![
+            OsString::from("--file"),
+            OsString::from("/root"),
+            OsString::from("--baz"),
+        ]);
     }
 
     #[test]
     #[should_panic(expected = "Unknown option -b")]
-    fn unknown_short_option(){
-        let mut cmd = create().args( Arg {
+    fn unknown_short_option() {
+        let mut cmd = create().args(Arg {
             id: "file",
             value_type: ArgValueType::String,
             usage: "Search file path",
