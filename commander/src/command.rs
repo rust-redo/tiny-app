@@ -1,5 +1,5 @@
-use crate::arg::Arg;
-use std::{env::args_os, ffi::OsString, vec};
+use crate::arg::{Arg, ArgValueType};
+use std::{env::args_os, ffi::OsString, vec, rc::Rc, any::Any};
 
 #[derive(Default)]
 pub struct Command<'a> {
@@ -37,6 +37,17 @@ impl<'a> Command<'a> {
         self.args.push(arg);
 
         self
+    }
+
+    pub fn args_value<T: Any + 'static>(&self, id: &str) -> Option<&T> {
+        let arg = self.args.iter().find(|arg| arg.id == id);
+
+        match arg {
+            Some(_arg) => {
+                _arg.value::<T>()
+            },
+            None => None
+        }
     }
 
     pub fn usage(&self) {
@@ -88,7 +99,10 @@ impl<'a> Command<'a> {
                     if index < os_str.len() - 1 {
                         let value = os_str[index + 1].clone().into_string().unwrap();
                         if !is_option(&value) {
-                            _arg.value = Some(value);
+                            _arg.value = Some(match _arg.value_type {
+                                ArgValueType::Number => {Rc::new(value.trim().parse::<i32>().unwrap())}, 
+                                _ => {Rc::new(value)},
+                            });
                         }
                     }
 

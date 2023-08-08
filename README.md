@@ -11,7 +11,7 @@ Just like [rust-by-practice](https://github.com/sunface/rust-by-practice) and [r
 > Every collection's source code in `tiny-app` contains comprehensive comments, it's easy to read. 
 
 - A deeper understanding of Rust syntax and engineering.
-- A implementation overview of each application.
+- A simplified implementation of each application.
 
 
 ## Collections

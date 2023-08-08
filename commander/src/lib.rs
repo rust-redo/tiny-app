@@ -26,22 +26,15 @@ mod test {
         assert_eq!(cmd.name, "commander");
         assert_eq!(cmd.description, Some("A cli tools builder"));
         assert_eq!(
-            cmd.args[0],
-            Arg {
-                id: "help",
-                usage: "Print help",
-                ..Arg::default()
-            }
+            cmd.args[0].id,
+            "help"
         );
         assert_eq!(
-            cmd.args[1],
-            Arg {
-                id: "version",
-                usage: "Print version",
-                ..Arg::default()
-            }
+            cmd.args[1].id,
+            "version"
         );
-        assert_eq!(cmd.args[2], file_arg);
+        assert_eq!(cmd.args[2].id, "file");
+        cmd.usage();
     }
 
     #[test]
@@ -89,5 +82,39 @@ mod test {
             ..Arg::default()
         });
         cmd._parse(vec![OsString::from("-f"), OsString::from("-b")]);
+    }
+
+    #[test]
+    fn should_parse_string() {
+        let mut cmd = create().args(Arg {
+            id: "file",
+            value_type: ArgValueType::String,
+            usage: "Search file path",
+            ..Arg::default()
+        });
+
+        cmd._parse(vec![OsString::from("-f"), OsString::from("/root")]);
+
+        let file_path = cmd.args_value::<String>("file");
+
+        assert_eq!(file_path, Some(&"/root".to_string()))
+    }
+
+    #[test]
+    fn should_parse_number() {
+        let mut cmd = create().args(Arg {
+            id: "port",
+            value_type: ArgValueType::Number,
+            usage: "TCP port",
+            ..Arg::default()
+        });
+
+        assert_eq!(cmd.args[2].id, "port");
+
+        cmd._parse(vec![OsString::from("-p"), OsString::from("8080")]);
+
+        let port = cmd.args_value::<i32>("port");
+
+        assert_eq!(port, Some(&8080))
     }
 }

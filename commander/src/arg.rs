@@ -1,14 +1,18 @@
+// use std::{any::Any, i32};
+
+use std::{any::Any, rc::Rc};
+
 #[derive(PartialEq, Debug, Clone)]
 pub enum ArgValueType {
     String,
     Number,
     Bool,
 }
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Clone, Debug)]
 pub struct Arg<'a> {
     pub id: &'a str,
     pub required: bool,
-    pub value: Option<String>,
+    pub value: Option<Rc<dyn Any + 'static>>,
     pub value_type: ArgValueType,
     pub usage: &'a str,
 }
@@ -37,5 +41,13 @@ impl<'a> Arg<'a> {
     }
     pub fn usage_with_pattern(&self, pad: usize) -> String {
         format!("  {: <2$}{}\n", self.pattern(), self.usage, pad,)
+    }
+    pub fn value<T>(&self) -> Option<&T>
+    where T: Any + 'static
+    {
+        match self.value {
+            Some(ref v) => {v.downcast_ref::<T>()},
+            None => None
+        }
     }
 }
