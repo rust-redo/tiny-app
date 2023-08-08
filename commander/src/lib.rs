@@ -19,7 +19,7 @@
 
 //     data.into()
 // }
-use std::{env::args_os, vec};
+use std::{env::args_os, vec, ffi::OsString};
 
 #[derive(PartialEq, Debug, Clone)]
 enum ArgValueType {
@@ -49,8 +49,14 @@ impl<'a> Default for Arg<'a> {
 }
 
 impl<'a> Arg<'a> {
+    fn option(&self) -> String {
+        format!("--{}", self.id)
+    }
+    fn short_option(&self) -> String {
+        format!("-{}", self.id.chars().nth(0).unwrap())
+    }
     fn pattern(&self) -> String {
-        format!("-{}, --{}", self.id.chars().nth(0).unwrap(), self.id)
+        format!("{}, {}", self.short_option(), self.option())
     }
     fn usage_with_pattern(&self, pad: usize) -> String {
         format!("  {: <2$}{}\n", self.pattern(), self.usage, pad,)
@@ -125,12 +131,46 @@ impl<'a> Command<'a> {
         println!("{}", env!("CARGO_PKG_VERSION"))
     }
 
-    // fn parse(&self) -> {
-    // }
+    fn parse(&mut self) {
+        self._parse(args_os().into_iter().collect());
+    }
+
+    fn _parse(&mut self, os_str: Vec<OsString>) {
+        let mut args_iter = self.args.iter_mut();
+        let mut index = 0;
+        let is_option = |opt: &str| opt.chars().nth(0).unwrap() == '-';
+
+        while index < os_str.len() {
+            let opt_str = os_str[index].clone().into_string().unwrap();
+            if is_option(&opt_str) {
+                let arg = args_iter.find(|arg| arg.option() == opt_str || arg.short_option() == opt_str);
+
+                if let Some(_arg) = arg {
+                    if index < os_str.len() - 1 {
+                        let value = os_str[index + 1].clone().into_string().unwrap();
+                        if !is_option(&value) {
+                            _arg.value = Some(value);
+                        }
+                    }
+
+                    match _arg.value {
+                        None => index += 1,
+                        _ => index += 2
+                    }
+
+                    continue;
+                }
+            } 
+                
+            panic!("Unknown option {}", opt_str);
+        }
+    }
 }
 
 #[cfg(test)]
 mod test {
+    use std::ffi::OsString;
+
     use crate::{Arg, ArgValueType, Command};
 
     fn create<'a>() -> Command<'a> {
@@ -165,8 +205,48 @@ mod test {
             }
         );
         assert_eq!(cmd.args[2], file_arg);
+    }
 
-        cmd.usage();
-        cmd.version();
+    #[test]
+    #[should_panic(expected = "Unknown option --foo")]
+    fn unknown_option_foo(){
+        let mut cmd = create();
+        cmd._parse(vec![OsString::from("--foo")]);
+    }
+
+    #[test]
+    #[should_panic(expected = "Unknown option --bar")]
+    fn unknown_option_bar(){
+        let mut cmd = create().args( Arg {
+            id: "file",
+            value_type: ArgValueType::String,
+            usage: "Search file path",
+            ..Arg::default()
+        });
+        cmd._parse(vec![OsString::from("--file"), OsString::from("--bar")]);
+    }
+
+    #[test]
+    #[should_panic(expected = "Unknown option --baz")]
+    fn unknown_option_baz(){
+        let mut cmd = create().args( Arg {
+            id: "file",
+            value_type: ArgValueType::String,
+            usage: "Search file path",
+            ..Arg::default()
+        });
+        cmd._parse(vec![OsString::from("--file"), OsString::from("/root") ,OsString::from("--baz")]);
+    }
+
+    #[test]
+    #[should_panic(expected = "Unknown option -b")]
+    fn unknown_short_option(){
+        let mut cmd = create().args( Arg {
+            id: "file",
+            value_type: ArgValueType::String,
+            usage: "Search file path",
+            ..Arg::default()
+        });
+        cmd._parse(vec![OsString::from("-f"), OsString::from("-b")]);
     }
 }
