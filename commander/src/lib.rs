@@ -1,5 +1,5 @@
-mod arg;
-mod command;
+pub mod arg;
+pub mod command;
 
 #[cfg(test)]
 mod test {
@@ -25,14 +25,8 @@ mod test {
         let cmd = create().args(file_arg.clone());
         assert_eq!(cmd.name, "commander");
         assert_eq!(cmd.description, Some("A cli tools builder"));
-        assert_eq!(
-            cmd.args[0].id,
-            "help"
-        );
-        assert_eq!(
-            cmd.args[1].id,
-            "version"
-        );
+        assert_eq!(cmd.args[0].id, "help");
+        assert_eq!(cmd.args[1].id, "version");
         assert_eq!(cmd.args[2].id, "file");
         cmd.usage();
     }
@@ -41,7 +35,7 @@ mod test {
     #[should_panic(expected = "Unknown option --foo")]
     fn unknown_option_foo() {
         let mut cmd = create();
-        cmd._parse(vec![OsString::from("--foo")]);
+        cmd._parse(vec![OsString::from("commander"), OsString::from("--foo")]);
     }
 
     #[test]
@@ -53,7 +47,11 @@ mod test {
             usage: "Search file path",
             ..Arg::default()
         });
-        cmd._parse(vec![OsString::from("--file"), OsString::from("--bar")]);
+        cmd._parse(vec![
+            OsString::from("commander"),
+            OsString::from("--file"),
+            OsString::from("--bar"),
+        ]);
     }
 
     #[test]
@@ -66,6 +64,7 @@ mod test {
             ..Arg::default()
         });
         cmd._parse(vec![
+            OsString::from("commander"),
             OsString::from("--file"),
             OsString::from("/root"),
             OsString::from("--baz"),
@@ -81,7 +80,11 @@ mod test {
             usage: "Search file path",
             ..Arg::default()
         });
-        cmd._parse(vec![OsString::from("-f"), OsString::from("-b")]);
+        cmd._parse(vec![
+            OsString::from("commander"),
+            OsString::from("-f"),
+            OsString::from("-b"),
+        ]);
     }
 
     #[test]
@@ -93,7 +96,11 @@ mod test {
             ..Arg::default()
         });
 
-        cmd._parse(vec![OsString::from("-f"), OsString::from("/root")]);
+        cmd._parse(vec![
+            OsString::from("commander"),
+            OsString::from("-f"),
+            OsString::from("/root"),
+        ]);
 
         let file_path = cmd.args_value::<String>("file");
 
@@ -109,7 +116,11 @@ mod test {
             ..Arg::default()
         });
 
-        cmd._parse(vec![OsString::from("-p"), OsString::from("8080")]);
+        cmd._parse(vec![
+            OsString::from("commander"),
+            OsString::from("-p"),
+            OsString::from("8080"),
+        ]);
 
         let port = cmd.args_value::<i32>("port");
 
@@ -120,7 +131,7 @@ mod test {
     fn should_parse_bool() {
         let mut cmd = create();
 
-        cmd._parse(vec![OsString::from("-h")]);
+        cmd._parse(vec![OsString::from("commander"), OsString::from("-h")]);
 
         let help = cmd.args_value::<bool>("help");
 
