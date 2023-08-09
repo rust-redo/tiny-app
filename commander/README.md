@@ -7,8 +7,9 @@
 
 ```shell
 /src
-  |-- arg.rs // Arg implementation
-  |-- command.rs // Command implementation
+  |-- arg_macro // arg! 
+  |-- arg.rs // Arg 
+  |-- command.rs // Command 
   |-- lib.rs // module entry with some test cases
   |-- main.rs // examples
 ```
