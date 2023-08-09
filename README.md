@@ -17,7 +17,7 @@ Just like [rust-by-practice](https://github.com/sunface/rust-by-practice) and [r
 ## Collections
 
 - [x] [guess number](./guess_number/README.md) `repl` `game` 
-- [x] [cli args](./cli_args/README.md) `cli` `parser`
+- [x] [commander](./commander/README.md) `cli` `parser`
 - [ ] [file tree]() `cli` `fs`
 - [ ] [text editor]()  `cli` `editor`
 - [ ] [calculator]() `repl` `compilation`
