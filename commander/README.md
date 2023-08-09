@@ -15,37 +15,6 @@
 
 ## Usage
 
-#### Show command usage
-
-```shell
-$ cargo run -- --help
-
-A cli tools builder
-
-Usage: commander [OPTIONS]
-
-Options:
-  -h, --help           Print help
-  -v, --version        Print version
-  -f, --file <string>  Search file path
-```
-
-#### Show command version
-
-```shell
-$ cargo run -- --version
-
-0.1.0
-```
-
-#### Catch `--file`
-
-```shell
-$ cargo run -- --file /root
-
-get --file value: /root
-```
-
 ### Usage with `struct`
 
 ```rust
@@ -79,6 +48,38 @@ fn main() {
 
 // TODO
 
+### Run
+
+#### Show command usage
+
+```shell
+$ cargo run -- --help
+
+A cli tools builder
+
+Usage: commander [OPTIONS]
+
+Options:
+  -h, --help           Print help
+  -v, --version        Print version
+  -f, --file <string>  Search file path
+```
+
+#### Show command version
+
+```shell
+$ cargo run -- --version
+
+0.1.0
+```
+
+#### Catch `--file` option
+
+```shell
+$ cargo run -- --file /root
+
+get --file value: /root
+```
 
 ## References
 
