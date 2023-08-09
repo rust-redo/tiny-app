@@ -1,14 +1,15 @@
-pub mod arg;
-pub mod command;
+mod arg;
+mod command;
+
+pub mod arg_macro;
+pub use arg::{Arg, ArgValueType};
+pub use command::Command;
 
 #[cfg(test)]
 mod test {
     use std::ffi::OsString;
 
-    use crate::{
-        arg::{Arg, ArgValueType},
-        command::Command,
-    };
+    use crate::{arg, Arg, ArgValueType, Command};
 
     fn create<'a>() -> Command<'a> {
         Command::new("commander").description("A cli tools builder")
@@ -105,6 +106,18 @@ mod test {
         let file_path = cmd.args_value::<String>("file");
 
         assert_eq!(file_path, Some(&"/root".to_string()));
+
+        let mut cmd = create().args(arg!(--file <string> "Search file path"));
+
+        cmd._parse(vec![
+            OsString::from("commander"),
+            OsString::from("-f"),
+            OsString::from("/root"),
+        ]);
+
+        let file_path = cmd.args_value::<String>("file");
+
+        assert_eq!(file_path, Some(&"/root".to_string()));
     }
 
     #[test]
@@ -115,6 +128,18 @@ mod test {
             usage: "TCP port",
             ..Arg::default()
         });
+
+        cmd._parse(vec![
+            OsString::from("commander"),
+            OsString::from("-p"),
+            OsString::from("8080"),
+        ]);
+
+        let port = cmd.args_value::<i32>("port");
+
+        assert_eq!(port, Some(&8080));
+
+        let mut cmd = create().args(arg!(--port <number> "TCP port"));
 
         cmd._parse(vec![
             OsString::from("commander"),
